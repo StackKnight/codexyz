@@ -1,4 +1,4 @@
-//! Shared implementation for `codex archive` and `codex unarchive`.
+//! Shared implementation for `codexyz archive` and `codexyz unarchive`.
 //!
 //! The CLI commands are thin app-server clients: resolve a user-provided UUID or exact session
 //! name, then call the existing `thread/archive` or `thread/unarchive` RPC.

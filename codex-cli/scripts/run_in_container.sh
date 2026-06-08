@@ -62,7 +62,7 @@ docker run --name "$CONTAINER_NAME" -d \
   --cap-add=NET_ADMIN \
   --cap-add=NET_RAW \
   -v "$WORK_DIR:/app$WORK_DIR" \
-  codex \
+  codexyz \
   sleep infinity
 
 # Write the allowed domains to a file in the container
@@ -92,4 +92,4 @@ quoted_args=""
 for arg in "$@"; do
   quoted_args+=" $(printf '%q' "$arg")"
 done
-docker exec -it "$CONTAINER_NAME" bash -c "cd \"/app$WORK_DIR\" && codex --sandbox workspace-write --ask-for-approval on-request ${quoted_args}"
+docker exec -it "$CONTAINER_NAME" bash -c "cd \"/app$WORK_DIR\" && codexyz --sandbox workspace-write --ask-for-approval on-request ${quoted_args}"

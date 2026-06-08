@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Unified entry point for the Codex CLI.
+// Unified entry point for the Codexyz CLI.
 
 import { spawn } from "node:child_process";
 import { existsSync, realpathSync } from "fs";
@@ -13,12 +13,12 @@ const __dirname = path.dirname(__filename);
 const require = createRequire(import.meta.url);
 
 const PLATFORM_PACKAGE_BY_TARGET = {
-  "x86_64-unknown-linux-musl": "@openai/codex-linux-x64",
-  "aarch64-unknown-linux-musl": "@openai/codex-linux-arm64",
-  "x86_64-apple-darwin": "@openai/codex-darwin-x64",
-  "aarch64-apple-darwin": "@openai/codex-darwin-arm64",
-  "x86_64-pc-windows-msvc": "@openai/codex-win32-x64",
-  "aarch64-pc-windows-msvc": "@openai/codex-win32-arm64",
+  "x86_64-unknown-linux-musl": "codexyz-linux-x64",
+  "aarch64-unknown-linux-musl": "codexyz-linux-arm64",
+  "x86_64-apple-darwin": "codexyz-darwin-x64",
+  "aarch64-apple-darwin": "codexyz-darwin-arm64",
+  "x86_64-pc-windows-msvc": "codexyz-win32-x64",
+  "aarch64-pc-windows-msvc": "codexyz-win32-arm64",
 };
 
 const { platform, arch } = process;
@@ -75,7 +75,7 @@ if (!platformPackage) {
   throw new Error(`Unsupported target triple: ${targetTriple}`);
 }
 
-function findCodexExecutable() {
+function findCodexyzExecutable() {
   let vendorRoot;
   try {
     const packageJsonPath = require.resolve(`${platformPackage}/package.json`);
@@ -84,27 +84,27 @@ function findCodexExecutable() {
     vendorRoot = path.join(__dirname, "..", "vendor");
   }
 
-  const codexExecutable = path.join(
+  const codexyzExecutable = path.join(
     vendorRoot,
     targetTriple,
     "bin",
-    process.platform === "win32" ? "codex.exe" : "codex",
+    process.platform === "win32" ? "codexyz.exe" : "codexyz",
   );
-  if (existsSync(codexExecutable)) {
-    return codexExecutable;
+  if (existsSync(codexyzExecutable)) {
+    return codexyzExecutable;
   }
 
   const packageManager = detectPackageManager();
   const updateCommand =
     packageManager === "bun"
-      ? "bun install -g @openai/codex@latest"
-      : "npm install -g @openai/codex@latest";
+      ? "bun install -g codexyz@latest"
+      : "npm install -g codexyz@latest";
   throw new Error(
-    `Missing optional dependency ${platformPackage}. Reinstall Codex: ${updateCommand}`,
+    `Missing optional dependency ${platformPackage}. Reinstall Codexyz: ${updateCommand}`,
   );
 }
 
-const binaryPath = findCodexExecutable();
+const binaryPath = findCodexyzExecutable();
 
 // Use an asynchronous spawn instead of spawnSync so that Node is able to
 // respond to signals (e.g. Ctrl-C / SIGINT) while the native binary is

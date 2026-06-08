@@ -50,7 +50,7 @@ def _is_windows() -> bool:
 
 
 def runtime_binary_name() -> str:
-    return "codex.exe" if _is_windows() else "codex"
+    return "codexyz.exe" if _is_windows() else "codexyz"
 
 
 def staged_runtime_package_root(root: Path) -> Path:

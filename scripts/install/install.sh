@@ -6,7 +6,7 @@ RELEASE="${CODEX_RELEASE:-latest}"
 NON_INTERACTIVE="${CODEX_NON_INTERACTIVE:-false}"
 
 BIN_DIR="${CODEX_INSTALL_DIR:-$HOME/.local/bin}"
-BIN_PATH="$BIN_DIR/codex"
+BIN_PATH="$BIN_DIR/codexyz"
 CODEX_HOME_DIR="${CODEX_HOME:-$HOME/.codex}"
 STANDALONE_ROOT="$CODEX_HOME_DIR/packages/standalone"
 RELEASES_DIR="$STANDALONE_ROOT/releases"
@@ -55,7 +55,7 @@ validate_version() {
   fi
 
   if ! printf '%s\n' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta)(\.[0-9]+)?)?$'; then
-    echo "Invalid Codex release version: $version. Expected latest or x.y.z[-alpha[.N]|-beta[.N]]." >&2
+    echo "Invalid Codexyz release version: $version. Expected latest or x.y.z[-alpha[.N]|-beta[.N]]." >&2
     exit 1
   fi
 }
@@ -104,7 +104,7 @@ download_file() {
     return
   fi
 
-  echo "curl or wget is required to install Codex." >&2
+  echo "curl or wget is required to install Codexyz." >&2
   exit 1
 }
 
@@ -121,7 +121,7 @@ download_text() {
     return
   fi
 
-  echo "curl or wget is required to install Codex." >&2
+  echo "curl or wget is required to install Codexyz." >&2
   exit 1
 }
 
@@ -129,13 +129,13 @@ release_url_for_asset() {
   asset="$1"
   resolved_version="$2"
 
-  printf 'https://github.com/openai/codex/releases/download/rust-v%s/%s\n' "$resolved_version" "$asset"
+  printf 'https://github.com/StackKnight/codexyz/releases/download/rust-v%s/%s\n' "$resolved_version" "$asset"
 }
 
 release_metadata_url() {
   resolved_version="$1"
 
-  printf 'https://api.github.com/repos/openai/codex/releases/tags/rust-v%s\n' "$resolved_version"
+  printf 'https://api.github.com/repos/StackKnight/codexyz/releases/tags/rust-v%s\n' "$resolved_version"
 }
 
 release_asset_digest_or_empty() {
@@ -251,7 +251,7 @@ file_sha256() {
     return
   fi
 
-  echo "sha256sum, shasum, or openssl is required to verify the Codex download." >&2
+  echo "sha256sum, shasum, or openssl is required to verify the Codexyz download." >&2
   exit 1
 }
 
@@ -261,7 +261,7 @@ verify_archive_digest() {
   actual_digest="$(file_sha256 "$archive_path")"
 
   if [ "$actual_digest" != "$expected_digest" ]; then
-    echo "Downloaded Codex archive checksum did not match expected digest." >&2
+    echo "Downloaded Codexyz archive checksum did not match expected digest." >&2
     echo "expected: $expected_digest" >&2
     echo "actual:   $actual_digest" >&2
     exit 1
@@ -270,7 +270,7 @@ verify_archive_digest() {
 
 require_command() {
   if ! command -v "$1" >/dev/null 2>&1; then
-    echo "$1 is required to install Codex." >&2
+    echo "$1 is required to install Codexyz." >&2
     exit 1
   fi
 }
@@ -284,11 +284,11 @@ resolve_version() {
     return
   fi
 
-  release_json="$(download_text "https://api.github.com/repos/openai/codex/releases/latest")"
+  release_json="$(download_text "https://api.github.com/repos/StackKnight/codexyz/releases/latest")"
   resolved="$(printf '%s\n' "$release_json" | sed -n 's/.*"tag_name":[[:space:]]*"rust-v\([^"]*\)".*/\1/p' | head -n 1)"
 
   if [ -z "$resolved" ]; then
-    echo "Failed to resolve the latest Codex release version." >&2
+    echo "Failed to resolve the latest Codexyz release version." >&2
     exit 1
   fi
 
@@ -478,7 +478,7 @@ cleanup_stale_install_artifacts() {
   find "$STANDALONE_ROOT" -mindepth 1 -maxdepth 1 -name '.current.*' -exec rm -f {} +
 
   if [ -d "$BIN_DIR" ]; then
-    find "$BIN_DIR" -mindepth 1 -maxdepth 1 -name '.codex.*' -exec rm -f {} +
+    find "$BIN_DIR" -mindepth 1 -maxdepth 1 \( -name '.codex.*' -o -name '.codexyz.*' \) -exec rm -f {} +
   fi
 }
 
@@ -513,6 +513,18 @@ version_from_binary() {
 }
 
 current_installed_version() {
+  version="$(version_from_binary "$CURRENT_LINK/bin/codexyz" || true)"
+  if [ -n "$version" ]; then
+    printf '%s\n' "$version"
+    return 0
+  fi
+
+  version="$(version_from_binary "$CURRENT_LINK/codexyz" || true)"
+  if [ -n "$version" ]; then
+    printf '%s\n' "$version"
+    return 0
+  fi
+
   version="$(version_from_binary "$CURRENT_LINK/bin/codex" || true)"
   if [ -n "$version" ]; then
     printf '%s\n' "$version"
@@ -529,7 +541,7 @@ current_installed_version() {
 }
 
 resolve_existing_codex() {
-  command -v codex 2>/dev/null || true
+  command -v codexyz 2>/dev/null || true
 }
 
 classify_existing_codex() {
@@ -599,30 +611,30 @@ prompt_yes_no() {
 print_launch_instructions() {
   case "$path_action" in
     added)
-      step "Current terminal: export PATH=\"$BIN_DIR:\$PATH\" && codex"
-      step "Future terminals: open a new terminal and run: codex"
+      step "Current terminal: export PATH=\"$BIN_DIR:\$PATH\" && codexyz"
+      step "Future terminals: open a new terminal and run: codexyz"
       step "PATH was added to $path_profile"
       ;;
     updated)
-      step "Current terminal: export PATH=\"$BIN_DIR:\$PATH\" && codex"
-      step "Future terminals: open a new terminal and run: codex"
+      step "Current terminal: export PATH=\"$BIN_DIR:\$PATH\" && codexyz"
+      step "Future terminals: open a new terminal and run: codexyz"
       step "PATH was updated in $path_profile"
       ;;
     configured)
-      step "Current terminal: export PATH=\"$BIN_DIR:\$PATH\" && codex"
-      step "Future terminals: open a new terminal and run: codex"
+      step "Current terminal: export PATH=\"$BIN_DIR:\$PATH\" && codexyz"
+      step "Future terminals: open a new terminal and run: codexyz"
       step "PATH is already configured in $path_profile"
       ;;
     *)
-      step "Current terminal: codex"
-      step "Future terminals: open a new terminal and run: codex"
+      step "Current terminal: codexyz"
+      step "Future terminals: open a new terminal and run: codexyz"
       ;;
   esac
 }
 
 maybe_launch_codex_now() {
-  if prompt_yes_no "Start Codex now?"; then
-    step "Launching Codex"
+  if prompt_yes_no "Start Codexyz now?"; then
+    step "Launching Codexyz"
     "$BIN_PATH"
   fi
 }
@@ -637,8 +649,8 @@ detect_conflicting_install() {
 
   conflict_manager="$manager"
   conflict_path="$existing_path"
-  step "Detected existing $manager-managed Codex at $existing_path"
-  warn "Multiple managed Codex installs can be ambiguous because PATH order decides which one runs."
+  step "Detected existing $manager-managed Codexyz at $existing_path"
+  warn "Multiple managed Codexyz installs can be ambiguous because PATH order decides which one runs."
 }
 
 handle_conflicting_install() {
@@ -648,23 +660,23 @@ handle_conflicting_install() {
 
   case "$conflict_manager" in
     brew)
-      uninstall_cmd="brew uninstall --cask codex"
+      uninstall_cmd="brew uninstall --cask codexyz"
       ;;
     bun)
-      uninstall_cmd="bun remove -g @openai/codex"
+      uninstall_cmd="bun remove -g codexyz"
       ;;
     *)
-      uninstall_cmd="npm uninstall -g @openai/codex"
+      uninstall_cmd="npm uninstall -g codexyz"
       ;;
   esac
 
-  if prompt_yes_no "Uninstall the existing $conflict_manager-managed Codex now?"; then
+  if prompt_yes_no "Uninstall the existing $conflict_manager-managed Codexyz now?"; then
     step "Running: $uninstall_cmd"
     if ! sh -c "$uninstall_cmd"; then
-      warn "Failed to uninstall the existing $conflict_manager-managed Codex. Continuing with the standalone install."
+      warn "Failed to uninstall the existing $conflict_manager-managed Codexyz. Continuing with the standalone install."
     fi
   else
-    warn "Leaving the existing $conflict_manager-managed Codex installed. PATH order will determine which codex runs."
+    warn "Leaving the existing $conflict_manager-managed Codexyz installed. PATH order will determine which codexyz runs."
   fi
 }
 
@@ -677,11 +689,11 @@ install_package_release() {
   rm -rf "$stage_release"
   mkdir -p "$stage_release"
   tar -xzf "$archive_path" -C "$stage_release"
-  chmod 0755 "$stage_release/bin/codex" "$stage_release/codex-path/rg"
+  chmod 0755 "$stage_release/bin/codexyz" "$stage_release/codex-path/rg"
   if [ -f "$stage_release/codex-resources/bwrap" ]; then
     chmod 0755 "$stage_release/codex-resources/bwrap"
   fi
-  ln -sf "bin/codex" "$stage_release/codex"
+  ln -sf "bin/codexyz" "$stage_release/codexyz"
 
   if [ -e "$release_dir" ] || [ -L "$release_dir" ]; then
     rm -rf "$release_dir"
@@ -702,9 +714,9 @@ install_legacy_platform_npm_release() {
   mkdir -p "$stage_release/codex-resources" "$extract_dir"
   tar -xzf "$archive_path" -C "$extract_dir"
 
-  cp "$vendor_root/codex/codex" "$stage_release/codex"
-  cp "$vendor_root/path/rg" "$stage_release/codex-resources/rg"
-  chmod 0755 "$stage_release/codex" "$stage_release/codex-resources/rg"
+  cp "$vendor_root/bin/codexyz" "$stage_release/codexyz"
+  cp "$vendor_root/codex-path/rg" "$stage_release/codex-resources/rg"
+  chmod 0755 "$stage_release/codexyz" "$stage_release/codex-resources/rg"
   if [ -f "$vendor_root/codex-resources/bwrap" ]; then
     cp "$vendor_root/codex-resources/bwrap" "$stage_release/codex-resources/bwrap"
     chmod 0755 "$stage_release/codex-resources/bwrap"
@@ -729,13 +741,13 @@ release_dir_is_complete() {
   case "$layout" in
     package)
       [ -f "$release_dir/codex-package.json" ] &&
-        [ -x "$release_dir/bin/codex" ] &&
-        [ -x "$release_dir/codex" ] &&
+        [ -x "$release_dir/bin/codexyz" ] &&
+        [ -x "$release_dir/codexyz" ] &&
         [ -x "$release_dir/codex-path/rg" ] ||
         return 1
       ;;
     legacy-platform-npm)
-      [ -x "$release_dir/codex" ] &&
+      [ -x "$release_dir/codexyz" ] &&
         [ -x "$release_dir/codex-resources/rg" ] ||
         return 1
       ;;
@@ -760,17 +772,17 @@ update_current_link() {
 release_codex_relative_path() {
   release_dir="$1"
 
-  if [ -x "$release_dir/bin/codex" ]; then
-    printf 'bin/codex\n'
+  if [ -x "$release_dir/bin/codexyz" ]; then
+    printf 'bin/codexyz\n'
   else
-    printf 'codex\n'
+    printf 'codexyz\n'
   fi
 }
 
 update_visible_command() {
   release_dir="$1"
   mkdir -p "$BIN_DIR"
-  tmp_link="$BIN_DIR/.codex.$$"
+  tmp_link="$BIN_DIR/.codexyz.$$"
   codex_relative_path="$(release_codex_relative_path "$release_dir")"
 
   replace_path_with_symlink "$BIN_PATH" "$CURRENT_LINK/$codex_relative_path" "$tmp_link"
@@ -850,7 +862,7 @@ elif release_asset_exists "codex-npm-$npm_tag-$resolved_version.tgz" "$resolved_
   install_layout="legacy-platform-npm"
   asset="codex-npm-$npm_tag-$resolved_version.tgz"
 else
-  echo "Could not find Codex package or platform npm release assets for Codex $resolved_version." >&2
+  echo "Could not find Codexyz package or platform npm release assets for Codexyz $resolved_version." >&2
   exit 1
 fi
 download_url="$(release_url_for_asset "$asset" "$resolved_version")"
@@ -860,11 +872,11 @@ release_dir="$RELEASES_DIR/$release_name"
 current_version="$(current_installed_version)"
 
 if [ -n "$current_version" ] && [ "$current_version" != "$resolved_version" ]; then
-  step "Updating Codex CLI from $current_version to $resolved_version"
+  step "Updating Codexyz CLI from $current_version to $resolved_version"
 elif [ -n "$current_version" ]; then
-  step "Updating Codex CLI"
+  step "Updating Codexyz CLI"
 else
-  step "Installing Codex CLI"
+  step "Installing Codexyz CLI"
 fi
 step "Detected platform: $platform_label"
 step "Resolved version: $resolved_version"
@@ -891,7 +903,7 @@ if ! release_dir_is_complete "$release_dir" "$resolved_version" "$vendor_target"
   archive_path="$tmp_dir/$asset"
   checksum_path="$tmp_dir/$checksum_asset"
 
-  step "Downloading Codex CLI"
+  step "Downloading Codexyz CLI"
   if [ "$install_layout" = "package" ]; then
     checksum_digest="$(release_asset_digest "$checksum_asset" "$resolved_version")"
     download_file "$checksum_url" "$checksum_path"
@@ -933,5 +945,5 @@ case "$path_action" in
     ;;
 esac
 
-printf 'Codex CLI %s installed successfully.\n' "$resolved_version"
+printf 'Codexyz CLI %s installed successfully.\n' "$resolved_version"
 maybe_launch_codex_now
