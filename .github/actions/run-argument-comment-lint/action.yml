@@ -16,6 +16,7 @@ runs:
     - uses: ./.github/actions/setup-bazel-ci
       with:
         target: ${{ inputs.target }}
+        disk-cache-scope: argument-comment-lint-${{ inputs.target }}
         install-test-prereqs: true
 
     - name: Install Linux sandbox build dependencies

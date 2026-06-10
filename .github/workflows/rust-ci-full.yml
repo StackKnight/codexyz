@@ -115,6 +115,7 @@ jobs:
       - uses: ./.github/actions/setup-bazel-ci
         with:
           target: ${{ runner.os }}
+          disk-cache-scope: argument-comment-lint-${{ runner.os }}
           install-test-prereqs: true
       - name: Install Linux sandbox build dependencies
         if: ${{ runner.os == 'Linux' }}

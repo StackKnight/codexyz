@@ -30,6 +30,7 @@ runs:
       uses: ./.github/actions/setup-bazel-ci
       with:
         target: ${{ inputs.target }}
+        disk-cache-scope: ${{ inputs.cache-scope }}
         install-test-prereqs: ${{ inputs.install-test-prereqs }}
 
     - name: Compute bazel repository cache key
