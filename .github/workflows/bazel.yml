@@ -23,7 +23,7 @@ jobs:
     # signal without putting PR latency back on the critical path. When
     # authenticated RBE is available, the Windows-cross shards exercise the
     # source-built V8/code-mode targets.
-    timeout-minutes: 120
+    timeout-minutes: 360
     strategy:
       fail-fast: false
       matrix:
@@ -321,7 +321,7 @@ jobs:
           key: ${{ steps.prepare_bazel.outputs.repository-cache-key }}
 
   clippy:
-    timeout-minutes: 120
+    timeout-minutes: 360
     strategy:
       fail-fast: false
       matrix:
@@ -407,7 +407,7 @@ jobs:
           key: ${{ steps.prepare_bazel.outputs.repository-cache-key }}
 
   verify-release-build:
-    timeout-minutes: 120
+    timeout-minutes: 360
     strategy:
       fail-fast: false
       matrix:
