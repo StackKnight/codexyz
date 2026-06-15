@@ -2792,6 +2792,7 @@ async fn project_layers_disabled_when_untrusted_or_unknown() -> std::io::Result<
     let tmp = tempdir()?;
     let project_root = tmp.path().join("project");
     let nested = project_root.join("child");
+    tokio::fs::create_dir_all(project_root.join(".git")).await?;
     tokio::fs::create_dir_all(nested.join(".codex")).await?;
     tokio::fs::write(
         nested.join(".codex").join(CONFIG_TOML_FILE),

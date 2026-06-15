@@ -1,12 +1,12 @@
 # codex-exec-server
 
-`codex-exec-server` is the library backing `codex exec-server`, a small
+`codex-exec-server` is the library backing `codexyz exec-server`, a small
 JSON-RPC server for spawning and controlling subprocesses through
 `codex-utils-pty`.
 
 It provides:
 
-- a CLI entrypoint: `codex exec-server`
+- a CLI entrypoint: `codexyz exec-server`
 - a Rust client: `ExecServerClient`
 - a small protocol module with shared request/response types
 
@@ -26,7 +26,7 @@ The CLI entrypoint supports:
 
 Remote mode registers the local exec-server with the environment registry,
 then reconnects to the service-provided rendezvous websocket as the environment.
-It uses the standard Codex ChatGPT sign-in state; run `codex login` first when
+It uses the standard Codexyz ChatGPT sign-in state; run `codexyz login` first when
 remote registration needs authentication. Containerized callers that receive an
 Agent Identity JWT in `CODEX_ACCESS_TOKEN` can opt into that auth path with
 `--use-agent-identity-auth`; Codex then registers an Agent task and sends the
@@ -37,7 +37,7 @@ Codex sends it as a bearer token on the registration request. For example:
 
 ```sh
 CODEX_API_KEY="$OPENAI_API_KEY" \
-codex exec-server \
+codexyz exec-server \
   --remote ... \
   --environment-id "$ENVIRONMENT_ID"
 ```
@@ -389,7 +389,7 @@ The crate exports:
   registration mode
 
 Callers must pass `ExecServerRuntimePaths` to `run_main()`. The top-level
-`codex exec-server` command builds these paths from the `codex` arg0 dispatch
+`codexyz exec-server` command builds these paths from the `codexyz` arg0 dispatch
 state. `RemoteEnvironmentConfig::new(...)` also takes the auth provider that
 remote registration should use; the CLI builds that provider from Codex auth
 state before starting remote mode.

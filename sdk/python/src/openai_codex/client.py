@@ -190,7 +190,7 @@ class CodexConfig:
 
 
 class CodexClient:
-    """Synchronous typed JSON-RPC client for `codex app-server` over stdio."""
+    """Synchronous typed JSON-RPC client for `codexyz app-server` over stdio."""
 
     def __init__(
         self,

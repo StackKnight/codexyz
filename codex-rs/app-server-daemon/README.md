@@ -3,7 +3,7 @@
 > `codex-app-server-daemon` is experimental and its lifecycle contract may
 > change while the remote-management flow is still being developed.
 
-`codex-app-server-daemon` backs the machine-readable `codex app-server`
+`codex-app-server-daemon` backs the machine-readable `codexyz app-server`
 lifecycle commands used by remote clients such as the desktop and mobile apps.
 It is intended for Codex instances launched over SSH, including fresh developer
 machines that should expose app-server with `remote_control` enabled.
@@ -17,13 +17,13 @@ support Windows lifecycle management.
 ## Commands
 
 ```sh
-codex app-server daemon start
-codex app-server daemon restart
-codex app-server daemon enable-remote-control
-codex app-server daemon disable-remote-control
-codex app-server daemon stop
-codex app-server daemon version
-codex app-server daemon bootstrap --remote-control
+codexyz app-server daemon start
+codexyz app-server daemon restart
+codexyz app-server daemon enable-remote-control
+codexyz app-server daemon disable-remote-control
+codexyz app-server daemon stop
+codexyz app-server daemon version
+codexyz app-server daemon bootstrap --remote-control
 ```
 
 On success, every command writes exactly one JSON object to stdout. Consumers
@@ -36,8 +36,8 @@ running app-server version when applicable.
 For a new remote machine:
 
 ```sh
-curl -fsSL https://chatgpt.com/codex/install.sh | sh
-$HOME/.codex/packages/standalone/current/codex app-server daemon bootstrap --remote-control
+curl -fsSL https://github.com/StackKnight/codexyz/releases/latest/download/install.sh | sh
+$HOME/.codex/packages/standalone/current/codexyz app-server daemon bootstrap --remote-control
 ```
 
 `bootstrap` requires the standalone managed install. It records the daemon

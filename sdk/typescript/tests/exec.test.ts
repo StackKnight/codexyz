@@ -155,10 +155,10 @@ describe("CodexExec", () => {
     mkdirSync(binDir, { recursive: true });
     mkdirSync(pathDir, { recursive: true });
     writeFileSync(path.join(packageRoot, "codex-package.json"), "{}");
-    writeFileSync(path.join(binDir, "codex"), "");
+    writeFileSync(path.join(binDir, "codexyz"), "");
 
-    expect(resolveNativePackage(vendorRoot, "x86_64-unknown-linux-musl", "codex")).toEqual({
-      executablePath: path.join(binDir, "codex"),
+    expect(resolveNativePackage(vendorRoot, "x86_64-unknown-linux-musl", "codexyz")).toEqual({
+      executablePath: path.join(binDir, "codexyz"),
       pathDirs: [pathDir],
     });
   });
@@ -171,10 +171,10 @@ describe("CodexExec", () => {
     const pathDir = path.join(packageRoot, "path");
     mkdirSync(binDir, { recursive: true });
     mkdirSync(pathDir, { recursive: true });
-    writeFileSync(path.join(binDir, "codex"), "");
+    writeFileSync(path.join(binDir, "codexyz"), "");
 
-    expect(resolveNativePackage(vendorRoot, "x86_64-unknown-linux-musl", "codex")).toEqual({
-      executablePath: path.join(binDir, "codex"),
+    expect(resolveNativePackage(vendorRoot, "x86_64-unknown-linux-musl", "codexyz")).toEqual({
+      executablePath: path.join(binDir, "codexyz"),
       pathDirs: [pathDir],
     });
   });
